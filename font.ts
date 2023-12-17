@@ -1,6 +1,14 @@
 import { Rgb, Lab } from './colors.js';
 import { imageDataToLabs } from './image.js';
 
+// const codes: number[] = [176, 177, 178, 219, 220, 221, 222, 223];
+const codes: number[] = [];
+
+for (let i = 0; i < 256; i++) {
+    if (i == 9 || i == 10 || i == 13 || i == 26) continue;
+    codes.push(i);
+}
+
 export class Glyph {
     private readonly labs: Lab[];
 
@@ -32,7 +40,10 @@ export class Font {
     }
 
     getGlyph(index: number): Uint8ClampedArray {
-        const glyph = this.glyphs.slice(index * 16, (index + 1) * 16);
+        const glyph = this.glyphs.slice(
+            index * this.height,
+            (index + 1) * this.height
+        );
         return glyph;
     }
 
@@ -53,13 +64,13 @@ export class Font {
                 const index = (i * 8 + j) * 4;
                 if (bit) {
                     imageData.data[index] = fg.r;
-                    imageData.data[index + 1] = fg.b;
-                    imageData.data[index + 2] = fg.g;
+                    imageData.data[index + 1] = fg.g;
+                    imageData.data[index + 2] = fg.b;
                     imageData.data[index + 3] = 255;
                 } else {
                     imageData.data[index] = bg.r;
-                    imageData.data[index + 1] = bg.b;
-                    imageData.data[index + 2] = bg.g;
+                    imageData.data[index + 1] = bg.g;
+                    imageData.data[index + 2] = bg.b;
                     imageData.data[index + 3] = 255;
                 }
             }
@@ -69,16 +80,16 @@ export class Font {
 
     createGlyphs(palette: Rgb[]): Glyph[] {
         const glyphs: Glyph[] = [];
-        for (let bg = 0; bg < 16; bg++) {
-            for (let fg = 0; fg < 16; fg++) {
-                for (let code = 0; code < 256; code++) {
-                    const fgColor = palette[fg];
-                    const bgColor = palette[bg];
-                    const glyph = this.createGlyph(code, fgColor, bgColor);
-                    glyphs.push(glyph);
-                }
-            }
-        }
+        palette.forEach((bg) => {
+            palette.forEach((fg) => {
+                codes.forEach((code) => {
+                    if (bg != fg) {
+                        const glyph = this.createGlyph(code, fg, bg);
+                        glyphs.push(glyph);
+                    }
+                });
+            });
+        });
         return glyphs;
     }
 }

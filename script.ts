@@ -25,7 +25,7 @@ for (const section of sections) {
     const glyph = section.findClosest(glyphs);
     ctx.putImageData(
         glyph.imageData,
-        section.column * 8,
+        section.column * font.width,
         section.row * font.height
     );
     await new Promise((resolve) => requestAnimationFrame(resolve));
