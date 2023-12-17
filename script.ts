@@ -5,11 +5,11 @@ import { SourceImage } from './image.js';
 // const font = await Font.load('./PETSCII_unshifted.F08');
 // const glyphs = font.createGlyphs(C64Palette);
 
-const font = await Font.load('./CP437.F16');
+const font = await Font.load('./CP437.F08');
 const glyphs = font.createGlyphs(CGAPalette);
 
-const source = await SourceImage.load('./cat.jpg');
-const columns = 80;
+const source = await SourceImage.load('./Gnoll.gif');
+const columns = 33;
 const rows = Math.floor(
     source.height / (font.height / font.width) / (source.width / columns)
 );
